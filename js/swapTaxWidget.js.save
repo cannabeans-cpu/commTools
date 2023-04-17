@@ -1,0 +1,77 @@
+// Import the ethers library
+const { ethers } = require("ethers");
+
+// Connect to Ethereum network using a local Ethereum node or a service like Infura
+const provider = new ethers.providers.JsonRpcProvider("https://mainnet.infura.io/v3/YOUR_API_KEY");
+
+// Replace "YOUR_API_KEY" with your actual Infura API key or use another Ethereum network provider if you prefer
+const signer = new ethers.Wallet(196cd2b4138042c0a3045e95347aada6, provider);
+
+const tokenList = [
+    // Add your preset ERC-20 tokens here in the following format:
+    // { name: 'Token Name', address: 'Token Contract Address' }
+];
+
+const communityWalletAddress = new URLSearchParams(window.location.search).get("communityWalletAddress");
+const taxPercentage = parseFloat(new URLSearchParams(window.location.search).get("taxPercentage"));
+const customTokenAddress = new URLSearchParams(window.location.search).get("customTokenAddress");
+
+const tokenListSelect = document.getElementById("tokenList");
+tokenList.forEach(token => {
+    const option = document.createElement("option");
+    option.value = token.address;
+    option.textContent = token.name;
+    tokenListSelect.appendChild(option);
+});
+
+document.getElementById("connectWallet").addEventListener("click", connectWallet);
+document.getElementById("swapToken").addEventListener("click", swapToken);
+
+// Add the functions for connecting the user's wallet and swapping tokens
+// You can use ethers.js or web3.js libraries to interact with the Ethereum blockchain
+
+let userWalletAddress;
+let userSigner;
+
+async function connectWallet() {
+    if (window.ethereum) {
+        try {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            userWalletAddress = window.ethereum.selectedAddress;
+            userSigner = new ethers.providers.Web3Provider(window.ethereum).getSigner();
+
+            tokenListSelect.disabled = false;
+            document.getElementById("swapToken").disabled = false;
+        } catch (error) {
+            console.error("User rejected the connection request:", error);
+        }
+    } else {
+        alert("No Ethereum-compatible browser detected. Please install MetaMask or another compatible wallet.");
+    }
+}
+
+async function swapToken() {
+    const selectedTokenAddress = tokenListSelect.value;
+    if (!selectedTokenAddress) {
+        alert("Please select a token to swap.");
+        return;
+    }
+
+    // Define the ERC-20 ABI, swap contract ABI, swap contract address, amount to swap, and swapTax wallet address
+    const erc20Abi = []; // Add your ERC-20 ABI here
+    const swapContractAbi = []; // Add your swap contract ABI here
+    const swapContractAddress = ""; // Add your swap contract address here
+    const amountToSwap = ethers.utils.parseUnits("1.0", 18); // Set the amount to swap (example: 1 token with 18 decimals)
+    const swapTaxWalletAddress = "0xAbE56E1321960fEac806c1C217ab8CB3a46136f0";
+
+    // Approve the token transfer
+    const tokenContract = new ethers.Contract(selectedTokenAddress, erc20Abi, userSigner);
+    const approveTx = await tokenContract.approve(swapContractAddress, amountToSwap);
+    await approveTx.wait();
+
+    // Perform the token swap and apply the tax
+    const swapContract = new ethers.Contract(swapContractAddress, swapContractAbi, userSigner);
+    const swapTx = await swapContract.swapTokens(selectedTokenAddress, customTokenAddress, amountToSwap, communityWalletAddress, taxPercentage, swapTaxWalletAddress);
+    await swapTx.wait();
+}
+

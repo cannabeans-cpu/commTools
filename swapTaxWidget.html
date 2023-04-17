@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>swapTax Widget</title>
+    <script src="https://cdn.ethers.io/lib/ethers-5.4.6.min.js" type="application/javascript"></script>
+</head>
+<body>
+    <h2>swapTax Widget</h2>
+    <button id="connectWallet">Connect Wallet</button>
+    <br>
+    <label for="inputToken">Select Input Token:</label>
+    <select id="inputToken">
+        <!-- Add options for preset ERC-20 tokens -->
+        <option value="0x...">TOKEN1</option>
+        <option value="0x...">TOKEN2</option>
+        <option value="0x...">TOKEN3</option>
+    </select>
+    <br>
+    <label for="amountToSwap">Amount to Swap:</label>
+    <input type="number" id="amountToSwap" min="0" step="0.01">
+    <br>
+    <button id="swapToken">Swap
+    </button>
+    <script src="swapTaxWidget.js"></script>
+</body>
+</html>
