@@ -1,16 +1,16 @@
 import React from 'react';
-import Generator from './components/Generator';
-import SwapWidget from './components/SwapWidget/SwapWidget';
 import './App.css';
+import Generator from './components/Generator';
 
 function App() {
   return (
     <div className="App">
+      <header className="App-header">
+        <h1>ComTax</h1>
+      </header>
       <Generator />
-      <SwapWidget />
     </div>
   );
 }
 
 export default App;
-

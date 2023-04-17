@@ -2,62 +2,55 @@ import React, { useState } from 'react';
 import './Generator.css';
 
 const Generator = () => {
-  const [developerAddress, setDeveloperAddress] = useState('');
   const [walletAddress, setWalletAddress] = useState('');
   const [taxPercentage, setTaxPercentage] = useState(0);
-  const [customTokenAddress, setCustomTokenAddress] = useState('');
+  const [tokenAddress, setTokenAddress] = useState('');
   const [iframeCode, setIframeCode] = useState('');
 
-  const generateIframeCode = () => {
-    const formattedIframeCode = `<iframe src="https://yourdomain.com/swap-widget?developerAddress=${developerAddress}&taxPercentage=${taxPercentage}&walletAddress=${walletAddress}&customTokenAddress=${customTokenAddress}" width="100%" height="500px" style="border:none;"></iframe>`;
-    setIframeCode(formattedIframeCode);
+  const generateCode = () => {
+    const code = `<iframe src="https://master--fastidious-gingersnap-9c813d.netlify.app?walletAddress=${walletAddress}&taxPercentage=${taxPercentage}&tokenAddress=${tokenAddress}" width="100%" height="300" frameborder="0" scrolling="no"></iframe>`;
+    setIframeCode(code);
   };
 
   return (
-    <div className="generator-container">
-      <div className="form-container">
-        <h1>comTax Generator</h1>
-        <div className="form-elements">
-          <label htmlFor="developerAddress">Developer Address:</label>
-          <input
-            type="text"
-            id="developerAddress"
-            value={developerAddress}
-            onChange={(e) => setDeveloperAddress(e.target.value)}
-          />
-          <label htmlFor="walletAddress">Wallet Address:</label>
-          <input
-            type="text"
-            id="walletAddress"
-            value={walletAddress}
-            onChange={(e) => setWalletAddress(e.target.value)}
-          />
-          <label htmlFor="taxPercentage">Tax Percentage:</label>
-          <input
-            type="number"
-            id="taxPercentage"
-            value={taxPercentage}
-            onChange={(e) => setTaxPercentage(e.target.value)}
-          />
-          <label htmlFor="customTokenAddress">Custom Token Address:</label>
-          <input
-            type="text"
-            id="customTokenAddress"
-            value={customTokenAddress}
-            onChange={(e) => setCustomTokenAddress(e.target.value)}
-          />
-          <button className="generate-button" onClick={generateIframeCode}>
-            Generate
-          </button>
-        </div>
+    <div>
+      <div className="glass form-elements">
+        <label htmlFor="walletAddress">Wallet Address:</label>
+        <input
+          type="text"
+          id="walletAddress"
+          value={walletAddress}
+          onChange={(e) => setWalletAddress(e.target.value)}
+        />
+        <label htmlFor="taxPercentage">Tax Percentage:</label>
+        <input
+          type="number"
+          id="taxPercentage"
+          min="0"
+          step="0.01"
+          value={taxPercentage}
+          onChange={(e) => setTaxPercentage(parseFloat(e.target.value))}
+        />
+        <label htmlFor="tokenAddress">Custom Token Address:</label>
+        <input
+          type="text"
+          id="tokenAddress"
+          value={tokenAddress}
+          onChange={(e) => setTokenAddress(e.target.value)}
+        />
+        <button onClick={generateCode}>Generate</button>
       </div>
-      <div className="code-container">
-        <pre>
-          <code>{iframeCode}</code>
-        </pre>
+      <div className="glass code-container">
+        {iframeCode && (
+          <div>
+            <h3>Generated Code:</h3>
+            <pre>{iframeCode}</pre>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
 export default Generator;
+
